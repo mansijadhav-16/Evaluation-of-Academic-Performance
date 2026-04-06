@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+{% block title %}Enter Attendance{% endblock %}
+{% block content %}
+<a href="{{ url_for('faculty_dashboard') }}" class="btn btn-secondary mb-3">&larr; Back to Dashboard</a>
+<h2>Enter Attendance</h2>
+<form method="POST">
+  {{ form.hidden_tag() }}
+  <div class="row mb-3">
+    <div class="col-md-6">
+      <label class="form-label">Class</label>
+      <select id="class-select" name="class_id" class="form-select">
+        <option value="">Select Class</option>
+        {% for c in assigned_classes %}
+        <option value="{{c.id}}" {% if c.id|string == selected_class_id|string %}selected{% endif %}>{{c.name}}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-6">
+      <label class="form-label">Division</label>
+      <select id="division-select" name="division_id" class="form-select">
+        <option value="">Select Division</option>
+        {% for d in assigned_divisions %}
+        <option value="{{d.id}}" {% if d.id|string == selected_division_id|string %}selected{% endif %}>{{d.name}}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+  <div class="mb-3">
+    {{ form.subject.label(class="form-label") }}
+    <select id="subject-select" name="subject" class="form-select">
+      <option value="">Select Subject</option>
+      {% for s in filtered_subjects %}
+      <option value="{{s.id}}" {% if s.id|string == form.subject.data|string %}selected{% endif %}>{{s.name}}</option>
+      {% endfor %}
+    </select>
+  </div>
+  <div class="mb-3">
+    {{ form.date.label(class="form-label") }}
+    {{ form.date(class="form-control", type="date", value=form.date.data or "" ) }}
+  </div>
+
+
+  <button type="submit" class="btn btn-primary mb-3" name="show_students" value="1" id="show-students-btn" disabled>
+    Show Students
+  </button>
+
+  {% if selected_class_id and selected_class_id != '' and selected_division_id and selected_division_id != '' and form.subject.data and form.subject.data != '' and students and students|length > 0 %}
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Student</th>
+          <th>Present</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for student in students %}
+        <tr>
+          <td>{{ student['name'] }}</td>
+          <td><input type="checkbox" name="present_{{ student['id'] }}"></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <button type="submit" class="btn btn-info" name="submit_attendance" value="1">Submit Attendance</button>
+  {% endif %}
+<script type="text/javascript">
+// Dependent dropdowns for division and subject
+const classDivMap = {{ class_divisions|tojson|safe }};
+const classSubjectsMap = {{ class_subjects|tojson|safe }};
+document.addEventListener('DOMContentLoaded', function() {
+  var classSelect = document.getElementById('class-select');
+  var divisionSelect = document.getElementById('division-select');
+  var subjectSelect = document.getElementById('subject-select');
+  var showBtn = document.getElementById('show-students-btn');
+  // Populate divisions based on class
+  classSelect.addEventListener('change', function() {
+    var classId = this.value;
+    divisionSelect.innerHTML = '<option value="">Select Division</option>';
+    (classDivMap[classId] || []).forEach(function(div) {
+      var opt = document.createElement('option');
+      opt.value = div.id;
+      opt.textContent = div.name;
+      divisionSelect.appendChild(opt);
+    });
+    subjectSelect.innerHTML = '<option value="">Select Subject</option>';
+    checkShowBtn();
+  });
+  // Populate subjects based on class/division
+  divisionSelect.addEventListener('change', function() {
+    var classId = classSelect.value;
+    var divisionId = this.value;
+    subjectSelect.innerHTML = '<option value="">Select Subject</option>';
+    (classSubjectsMap[classId + '-' + divisionId] || []).forEach(function(sub) {
+      var opt = document.createElement('option');
+      opt.value = sub.id;
+      opt.textContent = sub.name;
+      subjectSelect.appendChild(opt);
+    });
+    checkShowBtn();
+  });
+  subjectSelect.addEventListener('change', checkShowBtn);
+  function checkShowBtn() {
+    if (classSelect.value && divisionSelect.value && subjectSelect.value) {
+      showBtn.disabled = false;
+    } else {
+      showBtn.disabled = true;
+    }
+  }
+  // Set date field to today by default if empty
+  var dateInput = document.querySelector('input[type="date"]');
+  if (dateInput && !dateInput.value) {
+    var today = new Date();
+    var yyyy = today.getFullYear();
+    var mm = String(today.getMonth() + 1).padStart(2, '0');
+    var dd = String(today.getDate()).padStart(2, '0');
+    dateInput.value = yyyy + '-' + mm + '-' + dd;
+  }
+  // Initial check
+  checkShowBtn();
+});
+</script>
+</form>
+{% endblock %}

@@ -1,0 +1,173 @@
+{% extends 'base.html' %}
+{% block title %}Attendance Register{% endblock %}
+{% block content %}
+<a href="{{ url_for(role + '_dashboard') }}" class="btn btn-secondary mb-3">&larr; Back to Dashboard</a>
+<h2>Attendance Register</h2>
+<form method="GET" id="filter-form">
+  <div class="row mb-3">
+    <div class="col-md-3">
+      <label class="form-label">Class</label>
+      <select id="class-select" name="class_id" class="form-select" required>
+        <option value="">Select Class</option>
+        {% for c in classes %}
+        <option value="{{c.id}}" {% if c.id|string == selected_class_id|string %}selected{% endif %}>{{c.name}}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Division</label>
+      <select id="division-select" name="division_id" class="form-select" required {% if not selected_class_id %}disabled{% endif %}>
+        <option value="">Select Division</option>
+        {% for d in divisions %}
+        <option value="{{d.id}}" {% if d.id|string == selected_division_id|string %}selected{% endif %}>{{d.name}}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Subject</label>
+      <select id="subject-select" name="subject_id" class="form-select" required {% if not selected_division_id %}disabled{% endif %}>
+        <option value="">Select Subject</option>
+        {% for s in subjects %}
+        <option value="{{s.id}}" {% if s.id|string == selected_subject_id|string %}selected{% endif %}>{{s.name}}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label class="form-label">Month</label>
+      <input type="month" name="month" class="form-control" value="{{ selected_month }}" required>
+    </div>
+  </div>
+  <button type="submit" class="btn btn-primary mb-3">Show Attendance</button>
+</form>
+
+{% if students and dates %}
+<div class="table-responsive">
+  <table class="table table-bordered align-middle text-center" id="attendance-table">
+    <thead>
+      <tr>
+        <th>Roll No</th>
+        <th>Name</th>
+        {% for d in dates %}
+        <th>{{ d.day }}</th>
+        {% endfor %}
+        <th>Total</th>
+        <th>Percentage</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for student in students %}
+      <tr data-student-id="{{ student.id }}">
+        <td>{{ student.roll_no }}</td>
+        <td>{{ student.name }}</td>
+        {% set total_present = 0 %}
+        {% set total_days = 0 %}
+        {% for d in dates %}
+        <td>
+          <input type="checkbox" class="att-checkbox" data-date="{{ d.iso }}" {% if attendance[student.id][d.iso] == 'present' %}checked{% endif %} {% if not can_edit %}disabled{% endif %}>
+        </td>
+        {% if attendance[student.id][d.iso] == 'present' %}
+          {% set total_present = total_present + 1 %}
+        {% endif %}
+        {% set total_days = total_days + 1 %}
+        {% endfor %}
+        <td class="total-cell">{{ total_present }}</td>
+        <td>{% if total_days > 0 %}{{ '%.2f' % ((total_present / total_days) * 100) }}%{% else %}-{% endif %}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+
+<script>
+var classDivisions = {{ class_divisions | tojson | safe }};
+var classSubjects = {{ class_subjects | tojson | safe }};
+
+document.addEventListener('DOMContentLoaded', function() {
+  var classSelect = document.getElementById('class-select');
+  var divisionSelect = document.getElementById('division-select');
+  var subjectSelect = document.getElementById('subject-select');
+
+  // Initial state
+  if (!classSelect.value) {
+    divisionSelect.disabled = true;
+    subjectSelect.disabled = true;
+  } else {
+    divisionSelect.disabled = false;
+    // Populate divisions for selected class
+    divisionSelect.innerHTML = '<option value="">Select Division</option>';
+    if (classDivisions[classSelect.value]) {
+      classDivisions[classSelect.value].forEach(function(d) {
+        divisionSelect.innerHTML += `<option value="${d.id}">${d.name}</option>`;
+      });
+    }
+    // If division already selected, enable subject
+    if (divisionSelect.value) {
+      subjectSelect.disabled = false;
+    } else {
+      subjectSelect.disabled = true;
+    }
+  }
+
+  classSelect.addEventListener('change', function() {
+    var classId = this.value;
+    divisionSelect.innerHTML = '<option value="">Select Division</option>';
+    subjectSelect.innerHTML = '<option value="">Select Subject</option>';
+    subjectSelect.disabled = true;
+      if (classId && classDivisions[classId]) {
+        classDivisions[classId].forEach(function(d) {
+          divisionSelect.innerHTML += `<option value="${d.id}">${d.name}</option>`;
+        });
+        divisionSelect.disabled = false;
+      } else {
+        divisionSelect.disabled = true;
+        subjectSelect.disabled = true;
+      }
+      // Auto-focus division dropdown
+      divisionSelect.focus();
+  });
+
+    divisionSelect.addEventListener('change', function() {
+        var classId = classSelect.value;
+        var divisionId = this.value;
+        subjectSelect.innerHTML = '<option value="">Select Subject</option>';
+        if (classId && divisionId) {
+          // Key format: "classid-divisionid"
+          var key = classId + '-' + divisionId;
+          if (classSubjects[key]) {
+            classSubjects[key].forEach(function(s) {
+              subjectSelect.innerHTML += `<option value="${s.id}">${s.name}</option>`;
+            });
+            subjectSelect.disabled = false;
+          } else {
+            subjectSelect.disabled = true;
+          }
+        } else {
+          subjectSelect.disabled = true;
+        }
+    });
+
+  // Live update total column and save attendance via AJAX
+  const table = document.getElementById('attendance-table');
+  if (table) {
+    table.addEventListener('change', function(e) {
+      if (e.target.classList.contains('att-checkbox')) {
+        const row = e.target.closest('tr');
+        const studentId = row.getAttribute('data-student-id');
+        let total = 0;
+        row.querySelectorAll('.att-checkbox').forEach(cb => { if (cb.checked) total++; });
+        row.querySelector('.total-cell').textContent = total;
+        // AJAX call to update DB
+        fetch('{{ url_for("update_attendance_ajax") }}', {
+          method: 'POST',
+          body: JSON.stringify({ student_id: studentId, date: e.target.getAttribute('data-date'), status: e.target.checked ? 'present' : 'absent' }),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+      }
+    });
+  }
+});
+</script>
+{% endblock %}

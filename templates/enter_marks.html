@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+{% block title %}Enter Marks{% endblock %}
+{% block content %}
+<h2>Enter Marks</h2>
+<form method="POST">
+  {{ form.hidden_tag() }}
+  <div class="mb-3">
+    {{ form.subject.label(class="form-label") }}
+    {{ form.subject(class="form-select") }}
+  </div>
+  <div class="mb-3">
+    {{ form.date.label(class="form-label") }}
+    {{ form.date(class="form-control", type="date") }}
+  </div>
+  <table class="table table-bordered">
+    <thead>
+      <tr>
+        <th>Student</th>
+        <th>Marks</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for student in students %}
+      <tr>
+        <td>{{ student['name'] }}</td>
+        <td><input type="number" name="marks_{{ student['id'] }}" min="0" max="100" value="{{ student['marks']|default('') }}"></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  <button type="submit" class="btn btn-warning">Submit Marks</button>
+</form>
+{% endblock %}

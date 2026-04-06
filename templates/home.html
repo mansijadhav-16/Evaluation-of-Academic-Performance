@@ -1,0 +1,279 @@
+
+{% extends 'base.html' %}
+{% block title %}Academic Management System{% endblock %}
+{% block content %}
+<div style="margin-top:-60px;">
+<!-- Hero Section -->
+<section class="py-5" style="background: linear-gradient(135deg, #e3f0ff 0%, #b6e0fe 40%, #89c2d9 70%, #468faf 100%); color: #111;">
+  <div class="container-fluid px-3 px-md-4 px-lg-2">
+    <div class="row align-items-center g-0">
+      <div class="col-lg-6 col-md-7 px-3 py-4">
+  <h1 class="fw-bold mb-2" style="font-size:2.2rem; letter-spacing:1px; color:#000; text-shadow: 2px 2px 8px #b6e0fe;">Academic Management<br><span style="font-size:2.2rem; color:#000;">System</span></h1>
+  <p class="fs-6 mb-3" style="font-weight:500; font-size:1.1rem; color:#000; text-shadow: 1px 1px 6px #b6e0fe;">Empowering institutions to manage exams, results, attendance, and student records with ease and efficiency.</p>
+  <div class="row g-2 mb-2">
+          <div class="col-12 col-md-6">
+            <div class="d-flex align-items-center mb-2">
+              <span class="bg-white text-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width:36px;height:36px;"><i class="fa-solid fa-gauge-high" style="color:#000;"></i></span>
+              <span class="fs-6" style="color:#000;">Modern dashboard for all users</span>
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="d-flex align-items-center mb-2">
+              <span class="bg-white text-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width:36px;height:36px;"><i class="fa-solid fa-file-lines" style="color:#000;"></i></span>
+              <span class="fs-6" style="color:#000;">Advanced exam &amp; result workflows</span>
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="d-flex align-items-center mb-2">
+              <span class="bg-white text-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width:36px;height:36px;"><i class="fa-solid fa-chart-bar" style="color:#000;"></i></span>
+              <span class="fs-6" style="color:#000;">Attendance analytics &amp; reporting</span>
+            </div>
+          </div>
+          <div class="col-12 col-md-6">
+            <div class="d-flex align-items-center mb-2">
+              <span class="bg-white text-primary rounded-circle d-flex align-items-center justify-content-center me-3" style="width:36px;height:36px;"><i class="fa-solid fa-user-shield" style="color:#000;"></i></span>
+              <span class="fs-6" style="color:#000;">Secure login for admin, faculty, students</span>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6 col-md-5 text-center px-2">
+  <img src="../static/images/home.png" alt="Academic Hero" class="img-fluid" style="max-height: 440px; object-fit: contain;">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="py-5 bg-white" style="color: #111;">
+  <div class="container-fluid px-3 px-md-4 px-lg-2">
+  <h2 class="fw-bold text-secondary mb-4 text-center" style="color: #468faf;">Key Features</h2>
+    <div class="row g-4 justify-content-center">
+      <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="card h-100 shadow border-0 text-center">
+          <div class="card-body">
+            <img src="https://img.freepik.com/free-vector/exam-concept-illustration_114360-1647.jpg" alt="Exam" class="mb-3" style="height:48px;">
+            <h5 class="card-title">Exam & Result Management</h5>
+            <p class="card-text">Create, review, and publish exams and results with advanced analytics.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="card h-100 shadow border-0 text-center">
+          <div class="card-body">
+            <img src="https://img.freepik.com/free-vector/attendance-abstract-concept-illustration_335657-3172.jpg" alt="Attendance" class="mb-3" style="height:48px;">
+            <h5 class="card-title">Attendance Tracking</h5>
+            <p class="card-text">Monitor student attendance and generate insightful reports.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="card h-100 shadow border-0 text-center">
+          <div class="card-body">
+            <img src="https://img.freepik.com/free-vector/teacher-concept-illustration_114360-1637.jpg" alt="Student & Faculty" class="mb-3" style="height:48px;">
+            <h5 class="card-title">Student & Faculty Management</h5>
+            <p class="card-text">Easily manage student and faculty records, assignments, and roles.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-3 col-md-4 col-sm-6">
+        <div class="card h-100 shadow border-0 text-center">
+          <div class="card-body">
+            <img src="https://img.freepik.com/free-vector/security-concept-illustration_114360-1837.jpg" alt="Security" class="mb-3" style="height:48px;">
+            <h5 class="card-title">Secure & Reliable</h5>
+            <p class="card-text">Robust security and privacy for all users and data.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- News & Events Section -->
+<section class="py-5" style="color: #111;">
+  <div class="container-fluid px-3 px-md-4 px-lg-2">
+  <h2 class="fw-bold text-secondary mb-4 text-center" style="color: #468faf;">News & Events</h2>
+    <div class="row justify-content-center g-4">
+      <div class="col-lg-4 col-md-6">
+        <div class="card border-0 shadow h-100">
+          <div class="card-body">
+            <h5 class="card-title text-primary">Admissions Open 2025</h5>
+            <p class="card-text">Admissions for the new academic year are now open. Apply online or visit our campus for more details.</p>
+            <span class="badge bg-success">New</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="card border-0 shadow h-100">
+          <div class="card-body">
+            <h5 class="card-title text-primary">Upcoming Seminar</h5>
+            <p class="card-text">Join us for a seminar on "Digital Transformation in Education" on October 15th, 2025.</p>
+            <span class="badge bg-info">Event</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="card border-0 shadow h-100">
+          <div class="card-body">
+            <h5 class="card-title text-primary">Result Announcement</h5>
+            <p class="card-text">Board exam results will be announced on November 5th, 2025. Stay tuned!</p>
+            <span class="badge bg-info text-dark">Update</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Testimonials Section -->
+<section class="py-5 bg-light" style="color: #111;">
+  <div class="container-fluid px-3 px-md-4 px-lg-2">
+  <h2 class="fw-bold text-secondary mb-4 text-center" style="color: #468faf;">Testimonials</h2>
+    <div class="row justify-content-center g-4">
+      <div class="col-lg-4 col-md-6">
+        <div class="card border-0 shadow h-100">
+          <div class="card-body">
+            <div class="d-flex align-items-center mb-3">
+              <img src="https://randomuser.me/api/portraits/men/32.jpg" class="rounded-circle me-3" width="50" height="50" alt="User">
+              <div>
+                <h6 class="mb-0">Rahul Sharma</h6>
+                <small class="text-muted">Student</small>
+              </div>
+            </div>
+            <p class="card-text">"This platform made it so easy to check my results and attendance. The dashboard is super helpful!"</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="card border-0 shadow h-100">
+          <div class="card-body">
+            <div class="d-flex align-items-center mb-3">
+              <img src="https://randomuser.me/api/portraits/women/44.jpg" class="rounded-circle me-3" width="50" height="50" alt="User">
+              <div>
+                <h6 class="mb-0">Priya Verma</h6>
+                <small class="text-muted">Faculty</small>
+              </div>
+            </div>
+            <p class="card-text">"Managing marks and attendance is now effortless. The analytics are a game changer for teachers!"</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-4 col-md-6">
+        <div class="card border-0 shadow h-100">
+          <div class="card-body">
+            <div class="d-flex align-items-center mb-3">
+              <img src="https://randomuser.me/api/portraits/men/65.jpg" class="rounded-circle me-3" width="50" height="50" alt="User">
+              <div>
+                <h6 class="mb-0">Suresh Kumar</h6>
+                <small class="text-muted">Parent</small>
+              </div>
+            </div>
+            <p class="card-text">"I can track my child's progress and attendance easily. Highly recommend this system!"</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- Contact Section -->
+<section class="py-5" style="color: #111;">
+  <div class="container-fluid px-3 px-md-4 px-lg-2">
+  <h2 class="fw-bold text-secondary mb-4 text-center" style="color: #468faf;">Contact Us</h2>
+    <div class="row justify-content-center">
+      <div class="col-lg-6">
+        <div class="card border-0 shadow">
+          <div class="card-body">
+            <h5 class="card-title">Academic Management System</h5>
+            <p class="card-text mb-2"><i class="fa-solid fa-envelope me-2"></i> info@academic-system.com</p>
+            <p class="card-text mb-2"><i class="fa-solid fa-phone me-2"></i> +91 98765 43210</p>
+            <p class="card-text mb-2"><i class="fa-solid fa-location-dot me-2"></i> 123, College Road, Mumbai, India</p>
+            <p class="card-text"><i class="fa-solid fa-globe me-2"></i> www.academic-system.com</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Activity Section -->
+<section class="py-5 bg-white" style="color: #111;">
+  <div class="container">
+  <h2 class="fw-bold text-secondary mb-4 text-center" style="color: #468faf;">Activities</h2>
+    <div id="activityCarousel" class="carousel slide mb-4" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img src="https://i.pinimg.com/1200x/ab/6d/05/ab6d050a33e4d59164dde5c33a5ca3a0.jpg" class="d-block w-100 rounded" alt="Science Exhibition" style="max-height: 350px; object-fit: cover;">
+          <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded">
+            <h5>Science Exhibition</h5>
+            <p>Annual science fair showcasing student projects.</p>
+          </div>
+        </div>
+         <div class="carousel-item">
+          <img src="https://i.pinimg.com/1200x/e9/a7/ca/e9a7ca747fedc37341e9df4fd1b648de.jpg" class="d-block w-100 rounded" alt="Sports Day" style="max-height: 350px; object-fit: cover;">
+          <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded">
+            <h5>Sports Day</h5>
+            <p>Inter-school athletics and games.</p>
+          </div>
+        </div>
+        <div class="carousel-item">
+          <img src="https://i.pinimg.com/736x/9f/a5/58/9fa558812f2059303b86bbe9229310a0.jpg" class="d-block w-100 rounded" alt="Art & Culture Fest" style="max-height: 350px; object-fit: cover;">
+          <div class="carousel-caption d-none d-md-block bg-dark bg-opacity-50 rounded">
+            <h5>Art & Culture Fest</h5>
+            <p>Celebrating creativity and diversity.</p>
+          </div>
+        </div>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#activityCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#activityCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+      </button>
+    </div>
+  </div>
+</section>
+
+<!-- Awards Section -->
+<section class="py-5 bg-light" style="color: #111;">
+  <div class="container">
+  <h2 class="fw-bold text-secondary mb-4 text-center" style="color: #468faf;">Awards & Achievements</h2>
+    <div class="row justify-content-center">
+      <div class="col-md-4 mb-3">
+        <div class="card shadow border-0">
+          <img src="https://img.freepik.com/free-vector/award-concept-illustration_114360-1679.jpg" class="card-img-top p-3" alt="Best School Award" style="height: 180px; object-fit: contain;">
+          <div class="card-body">
+            <h5 class="card-title">Best School Award</h5>
+            <p class="card-text">Recognized for excellence in academics and co-curricular activities.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <div class="card shadow border-0">
+          <img src="https://img.freepik.com/free-vector/medal-concept-illustration_114360-1680.jpg" class="card-img-top p-3" alt="Academic Excellence" style="height: 180px; object-fit: contain;">
+          <div class="card-body">
+            <h5 class="card-title">Academic Excellence</h5>
+            <p class="card-text">Awarded for outstanding student performance in board exams.</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 mb-3">
+        <div class="card shadow border-0">
+          <img src="https://img.freepik.com/free-vector/certificate-concept-illustration_114360-1681.jpg" class="card-img-top p-3" alt="Innovation in Teaching" style="height: 180px; object-fit: contain;">
+          <div class="card-body">
+            <h5 class="card-title">Innovation in Teaching</h5>
+            <p class="card-text">Honored for creative and effective teaching methods.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="bg-primary text-white text-center py-3 mt-5">
+  <div class="container">
+    <span class="fw-bold">Academic Management System</span> &copy; {{ 2025 }}. All rights reserved.
+  </div>
+</footer>
+</div>
+{% endblock %}

@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% block title %}Manage Exams{% endblock %}
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4"><i class="fa-solid fa-clipboard-list me-2"></i>Manage Exams</h2>
+  <div class="card mb-4">
+    <div class="card-header bg-primary text-white">Add New Exam</div>
+    <div class="card-body">
+      <form method="POST">
+        <div class="row g-3 align-items-end">
+          <div class="col-md-3">
+            <label class="form-label">Exam Name</label>
+            <input type="text" name="name" class="form-control" placeholder="e.g. Internal, Final" required>
+          </div>
+          <div class="col-md-2">
+            <label class="form-label">Year</label>
+            <input type="number" name="year" class="form-control" min="2000" max="2100" value="{{ current_year }}" required>
+          </div>
+          <div class="col-md-2">
+            <label class="form-label">Month</label>
+            <select name="month" class="form-select" required>
+              {% for m in range(1,13) %}
+                <option value="{{ m }}" {% if m==current_month %}selected{% endif %}>{{ m }}</option>
+              {% endfor %}
+            </select>
+          </div>
+          <div class="col-md-3">
+            <label class="form-label">Class</label>
+            <div class="input-group">
+              <select name="class_id" id="classSelect" class="form-select" required>
+                <option value="">Select Class</option>
+                <option value="all">All</option>
+                {% for c in classes %}
+                  <option value="{{ c.id }}">{{ c.name }}</option>
+                {% endfor %}
+              </select>
+              <button type="button" class="btn btn-outline-secondary" id="toggleMulti">Multiple Select</button>
+            </div>
+            <script>
+              document.addEventListener('DOMContentLoaded', function() {
+                var select = document.getElementById('classSelect');
+                var toggleBtn = document.getElementById('toggleMulti');
+                var isMulti = false;
+                toggleBtn.addEventListener('click', function() {
+                  isMulti = !isMulti;
+                  if (isMulti) {
+                    select.setAttribute('multiple', 'multiple');
+                    select.setAttribute('size', Math.min(6, select.options.length));
+                    toggleBtn.textContent = 'Single Select';
+                  } else {
+                    select.removeAttribute('multiple');
+                    select.setAttribute('size', 1);
+                    toggleBtn.textContent = 'Multiple Select';
+                  }
+                });
+              });
+            </script>
+            </select>
+          </div>
+          <div class="col-md-2">
+            <button type="submit" class="btn btn-success w-100"><i class="fa-solid fa-plus"></i> Add Exam</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-header bg-light fw-bold">All Exams</div>
+    <div class="card-body p-0">
+      <table class="table table-bordered mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Exam Name</th>
+            <th>Year</th>
+            <th>Month</th>
+            <th>Class</th>
+            <th>Status</th>
+            <th>Created</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for e in exams %}
+          <tr>
+            <td>{{ e.name }}</td>
+            <td>{{ e.year }}</td>
+            <td>{{ e.month }}</td>
+            <td>{{ e.class_name }}</td>
+            <td>{% if e.published %}<span class="badge bg-success">Published</span>{% else %}<span class="badge bg-secondary">Draft</span>{% endif %}</td>
+            <td>{% if e.created_at %}{{ e.created_at[:10] }}{% else %}-{% endif %}</td>
+          </tr>
+          {% else %}
+          <tr><td colspan="6" class="text-center text-muted">No exams found.</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

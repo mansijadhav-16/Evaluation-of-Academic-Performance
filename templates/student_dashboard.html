@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% block title %}Student Dashboard{% endblock %}
+{% block content %}
+<h2>Student Dashboard</h2>
+<div class="row">
+  <div class="col-md-6">
+    <div class="card mb-3">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <span>Attendance</span>
+      </div>
+      <div class="card-body">
+        <canvas id="attendanceChart" height="200"></canvas>
+        <table class="table mt-3">
+          <thead><tr><th>Subject</th><th>% Present</th><th>Total Classes</th></tr></thead>
+          <tbody>
+            {% set total_classes = 0 %}
+            {% set total_present = 0 %}
+            {% for subject in attendance %}
+            <tr>
+              <td>{{ subject['name'] }}</td>
+              <td>{{ subject['percent'] }}%</td>
+              <td>{{ subject['total'] }}</td>
+            </tr>
+            {% set total_classes = total_classes + subject['total'] %}
+            {% set total_present = total_present + (subject['percent'] * subject['total'] / 100) %}
+            {% endfor %}
+          </tbody>
+          <tfoot>
+            <tr class="table-info">
+              <th>Total</th>
+              <th colspan="2">
+                {% if total_classes > 0 %}
+                  {{ '%.2f' % ((total_present / total_classes) * 100) }}% ({{ total_present|round(0, 'floor') }}/{{ total_classes }})
+                {% else %}-{% endif %}
+              </th>
+            </tr>
+          </tfoot>
+        </table>
+        <form method="GET" class="mt-2">
+          <label for="month">Filter by Month:</label>
+          <input type="month" name="month" id="month" value="{{ month }}">
+          <button type="submit" class="btn btn-sm btn-primary">Filter</button>
+        </form>
+        {% if defaulter %}
+          <div class="alert alert-danger mt-2">Defaulter Warning: Attendance below 75%</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="col-md-4 mb-4">
+    <div class="card h-100 shadow-sm">
+      <div class="card-body d-flex flex-column justify-content-between">
+        <div>
+          <h5 class="card-title"><i class="fa-solid fa-clipboard-list me-2"></i>View Results</h5>
+          <p class="card-text">View your published exam results.</p>
+        </div>
+        <a href="{{ url_for('view_results') }}" class="btn btn-primary mt-3">View Results</a>
+      </div>
+    </div>
+  </div>
+</div>
+{% if todays_attendance %}
+  <div class="alert alert-info mb-3">
+    <strong>Today's Attendance:</strong>
+    <ul class="mb-0">
+      {% for att in todays_attendance %}
+        <li>{{ att.subject }}: {% if att.status == 'present' %}<span class="text-success">Present</span>{% elif att.status == 'absent' %}<span class="text-danger">Absent</span>{% else %}<span class="text-warning">Not Marked</span>{% endif %}</li>
+      {% endfor %}
+    </ul>
+  </div>
+{% endif %}
+<script type="text/javascript">
+// Chart.js: Attendance Trend
+var attLabels = {{ attendance|map(attribute='name')|list|tojson|safe }};
+var attData = {{ attendance|map(attribute='percent')|list|tojson|safe }};
+var attendanceChart = new Chart(document.getElementById('attendanceChart'), {
+  type: 'bar',
+  data: {
+    labels: attLabels,
+    datasets: [{
+      label: '% Present',
+      data: attData,
+      backgroundColor: 'rgba(75, 192, 192, 0.6)',
+      borderColor: 'rgba(75, 192, 192, 1)',
+      borderWidth: 1
+    }]
+  },
+  options: {responsive: true, plugins: {legend: {display: false}}, scales: {y: {max: 100, min: 0}}}
+});
+</script>
+{% endblock %}

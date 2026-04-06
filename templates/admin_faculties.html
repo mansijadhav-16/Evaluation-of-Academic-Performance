@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Faculties{% endblock %}
+{% block content %}
+<h2>All Faculties</h2>
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+  <th>Assignments</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for faculty in faculties %}
+    <tr>
+      <td>{{ faculty['name'] }}</td>
+      <td>{{ faculty['email'] }}</td>
+      <td>
+        {% for a in faculty['assignments'] %}
+          {{ a.subject_name }} ({{ a.class_name }} - {{ a.division_name }})<br>
+        {% endfor %}
+        <a href="{{ url_for('edit_faculty', faculty_id=faculty['id']) }}" class="btn btn-sm btn-warning mt-2">Edit</a>
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

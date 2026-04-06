@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% block title %}Review & Publish Results{% endblock %}
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4"><i class="fa-solid fa-clipboard-check me-2"></i>Review & Publish Results</h2>
+  <form method="get" class="row g-3 mb-4">
+    <div class="col-md-3">
+      <label class="form-label">Exam</label>
+      <select class="form-select" name="exam_id" required>
+        <option value="">Select Exam</option>
+        {% for exam in exams %}
+        <option value="{{ exam.id }}" {% if exam.id|string == selected_exam_id|string %}selected{% endif %}>{{ exam.name }} ({{ exam.year }}-{{ '%02d'|format(exam.month) }}) - {{ exam.class_name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2 align-self-end">
+      <button type="submit" class="btn btn-primary">Show Results</button>
+    </div>
+  </form>
+  {% if selected_exam_id and not selected_class_id and classes %}
+    <h4 class="mt-4">Select Class to View Results:</h4>
+    <div class="row g-3 mb-4">
+      {% for c in classes %}
+      <div class="col-md-3">
+        <a href="{{ url_for('admin_review_results', exam_id=selected_exam_id, class_id=c.class_id) }}" class="btn btn-outline-primary w-100">{{ c.name }}</a>
+      </div>
+      {% endfor %}
+    </div>
+  {% endif %}
+
+  {% if students and subjects and selected_class_id %}
+  <form method="post">
+    <input type="hidden" name="exam_id" value="{{ selected_exam_id }}">
+    <input type="hidden" name="class_id" value="{{ selected_class_id }}">
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Roll No</th>
+          <th>Name</th>
+          {% for subj in subjects %}
+          <th>{{ subj.name }}</th>
+          {% endfor %}
+          <th>Total</th>
+          <th>Percentage</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for student in students %}
+        {# FIX: Use namespace to correctly accumulate total and max marks across subjects #}
+        {% set ns = namespace(total=0, outof=0) %}
+        <tr>
+          <td>{{ student.roll_no }}</td>
+          <td>{{ student.name }}</td>
+          {% for subj in subjects %}
+          {% set m = marks.get((student.id, subj.id)) %}
+          <td>{% if m %}{{ m.marks }}/{{ m.out_of }}{% else %}-{% endif %}</td>
+          {% if m %}
+            {# Update namespace variables #}
+            {% set ns.total = ns.total + m.marks %}
+            {% set ns.outof = ns.outof + m.out_of %}
+          {% endif %}
+          {% endfor %}
+          {# FIX: Display Total Marks / Total Max Marks #}
+          <td>{% if ns.outof > 0 %}{{ ns.total }}/{{ ns.outof }}{% else %}{{ ns.total }}{% endif %}</td>
+          <td>{% if ns.outof > 0 %}{{ '%.2f' % ((ns.total / ns.outof) * 100) }}%{% else %}-{% endif %}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% if not published %}
+    <button type="submit" name="publish" value="1" class="btn btn-success">Publish Result for This Class</button>
+    {% else %}
+    <span class="badge bg-success">Published</span>
+    {% endif %}
+  </form>
+  {% endif %}
+</div>
+{% endblock %}

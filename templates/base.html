@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}Academic Performance System{% endblock %}</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&family=Inter:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <style>
+    body {
+      font-family: 'Inter', 'Poppins', 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+    }
+    .container, .container-fluid {
+      max-width: 1200px !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
+    }
+    h1, h2, h3, h4, h5, h6 {
+  font-family: 'Inter', 'Poppins', 'Montserrat', 'Segoe UI', Arial, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+    }
+    .card {
+      border-radius: 1rem;
+    }
+    .navbar {
+  font-family: 'Inter', 'Poppins', 'Montserrat', 'Segoe UI', Arial, sans-serif;
+  font-size: 1.1rem;
+    }
+    .btn {
+  font-family: 'Inter', 'Poppins', 'Segoe UI', 'Roboto', Arial, sans-serif;
+  font-weight: 500;
+  letter-spacing: 0.2px;
+    }
+    .carousel-caption h5 {
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+    .carousel-caption p {
+      font-size: 1.1rem;
+    }
+    .footer {
+  font-family: 'Inter', 'Poppins', 'Montserrat', 'Segoe UI', Arial, sans-serif;
+  font-size: 1rem;
+    }
+  </style>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</head>
+<body>
+<nav class="navbar navbar-expand-lg navbar-dark" style="background: linear-gradient(90deg, #468faf 0%, #b6e0fe 100%);">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="/">
+      <i class="fa-solid fa-graduation-cap me-2"></i>Academic System
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        {% if session.get('user_id') %}
+          <li class="nav-item">
+            <span class="nav-link">
+              <i class="fa-solid fa-user me-1"></i>
+              {% if session.get('user_name') %}{{ session.get('user_name') }}{% endif %}
+            </span>
+          </li>
+          {% if session.get('role') == 'admin' %}
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('admin_dashboard') }}"><i class="fa-solid fa-tachometer-alt me-1"></i>Admin Dashboard</a></li>
+          {% elif session.get('role') == 'faculty' %}
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('faculty_dashboard') }}"><i class="fa-solid fa-tachometer-alt me-1"></i>Faculty Dashboard</a></li>
+          {% elif session.get('role') == 'student' %}
+            <li class="nav-item"><a class="nav-link" href="{{ url_for('student_dashboard') }}"><i class="fa-solid fa-tachometer-alt me-1"></i>Student Dashboard</a></li>
+          {% endif %}
+          <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}"><i class="fa-solid fa-sign-out-alt me-1"></i>Logout</a></li>
+        {% else %}
+          <li class="nav-item"><a class="nav-link" href="/login"><i class="fa-solid fa-sign-in-alt me-1"></i>Login</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
+<div class="flash-overlay" style="position:fixed;top:80px;left:0;width:100vw;z-index:2000;pointer-events:none;">
+  <div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="row justify-content-center">
+          <div class="col-md-8">
+            {% for category, message in messages %}
+              <div class="alert alert-{{ category }} flash shadow-sm d-flex align-items-center mt-2" style="pointer-events:auto;">
+                <i class="fa-solid fa-circle-info me-2"></i>{{ message }}
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      {% endif %}
+    {% endwith %}
+  </div>
+</div>
+<script>
+window.addEventListener('DOMContentLoaded', function() {
+  setTimeout(function() {
+    document.querySelectorAll('.flash').forEach(function(el) {
+      el.style.transition = 'opacity 0.5s';
+      el.style.opacity = '0';
+      setTimeout(function() { el.remove(); }, 500);
+    });
+  }, 3000);
+});
+</script>
+<div class="container py-4" style="margin-top: 80px;">
+    {% block content %}{% endblock %}
+</div>
+</body>
+<script>
+function togglePassword(id, el) {
+  var input = document.getElementById(id);
+  if (input.type === "password") {
+    input.type = "text";
+    el.querySelector('i').classList.remove('fa-eye');
+    el.querySelector('i').classList.add('fa-eye-slash');
+  } else {
+    input.type = "password";
+    el.querySelector('i').classList.remove('fa-eye-slash');
+    el.querySelector('i').classList.add('fa-eye');
+  }
+}
+</script>
+</html>

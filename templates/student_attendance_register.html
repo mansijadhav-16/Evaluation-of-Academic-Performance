@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block title %}Today's Attendance{% endblock %}
+{% block content %}
+<h2>Today's Attendance</h2>
+<div class="card mt-3">
+  <div class="card-body">
+    <h5 class="card-title">Hello, {{ student_name or 'Student' }}!</h5>
+    <p class="card-text">Date: <b>{{ today }}</b></p>
+    {% if attendance_today %}
+      <div class="alert alert-success">Your attendance for today is marked as: <b>{{ attendance_today|capitalize }}</b></div>
+    {% else %}
+      <div class="alert alert-warning">Your attendance for today has <b>not been marked</b> yet.</div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

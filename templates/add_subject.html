@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Add Subject{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-6">
+    <div class="card shadow-lg border-0">
+      <div class="card-header bg-info text-white text-center">
+        <h4 class="mb-0"><i class="fa-solid fa-book me-2"></i>Add Subject</h4>
+      </div>
+      <div class="card-body p-4">
+        <form method="POST">
+          {{ form.hidden_tag() }}
+          <div class="mb-3">
+            <label class="form-label"><i class="fa-solid fa-book-open me-1"></i> Subject Name</label>
+            {{ form.name(class="form-control") }}
+          </div>
+          <div class="mb-3">
+            <label class="form-label"><i class="fa-solid fa-school me-1"></i> Class</label>
+            {{ form.class_id(class="form-select") }}
+          </div>
+          <button type="submit" class="btn btn-info w-100 py-2"><i class="fa-solid fa-plus me-1"></i>Add Subject</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

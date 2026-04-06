@@ -1,0 +1,82 @@
+body {
+	font-family: 'Segoe UI', Arial, sans-serif;
+	background: #fff;
+	color: #111;
+}
+.navbar, .card-header {
+	background: linear-gradient(90deg, #468faf 0%, #89c2d9 100%);
+	color: #000 !important;
+	font-weight: 700;
+	letter-spacing: 1px;
+	border-bottom: 2px solid #b6e0fe;
+}
+.navbar-nav .nav-link {
+	color: #000 !important;
+	font-weight: 600;
+}
+.card {
+	background: #e3f0ff;
+	border-radius: 18px;
+	box-shadow: 0 4px 24px rgba(70, 143, 175, 0.12);
+	border: 1px solid #b6e0fe;
+	color: #111;
+}
+.flash {
+	margin-top: 1rem;
+	border-radius: 10px;
+	background: #89c2d9;
+	color: #111;
+	font-weight: 700;
+	padding: 12px 24px;
+	box-shadow: 0 2px 8px rgba(70, 143, 175, 0.12);
+}
+.table th {
+	background: #b6e0fe;
+	color: #111;
+	font-weight: 700;
+}
+.table td {
+	background: #e3f0ff;
+	color: #111;
+}
+.btn-primary {
+	background: linear-gradient(90deg, #468faf 0%, #b6e0fe 100%);
+	color: #111 !important;
+	font-weight: 700;
+	border: none;
+}
+.btn-success {
+	background: linear-gradient(90deg, #89c2d9 0%, #468faf 100%);
+	color: #111 !important;
+	font-weight: 700;
+	border: none;
+}
+.btn-warning {
+	background: linear-gradient(90deg, #b6e0fe 0%, #e3f0ff 100%);
+	color: #111 !important;
+	font-weight: 700;
+	border: none;
+}
+.btn-secondary {
+	background: linear-gradient(90deg, #e3f0ff 0%, #468faf 100%);
+	color: #111 !important;
+	font-weight: 700;
+	border: none;
+}
+/* Ensure .btn-danger also has black text */
+.btn-danger {
+	color: #111 !important;
+	font-weight: 700;
+}
+.form-control, .form-select {
+	border-radius: 10px;
+	border: 1px solid #b6e0fe;
+	background: #fff;
+	color: #111;
+	font-size: 1.05em;
+}
+.form-label {
+	font-weight: 700;
+	color: #468faf;
+	letter-spacing: 0.5px;
+}

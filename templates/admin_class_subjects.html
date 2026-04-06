@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Subjects for {{ class_name }}{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card shadow-lg border-0 mb-4">
+      <div class="card-header bg-info text-white text-center">
+        <h4 class="mb-0"><i class="fa-solid fa-book me-2"></i>Subjects for {{ class_name }}</h4>
+      </div>
+      <div class="card-body p-4">
+        <form method="POST" class="row g-3 align-items-center mb-3">
+          <div class="col-md-8">
+            <input type="text" name="subject_name" class="form-control" placeholder="Subject Name" required>
+          </div>
+          <div class="col-md-4">
+            <button type="submit" class="btn btn-info w-100"><i class="fa-solid fa-plus"></i> Add Subject</button>
+          </div>
+        </form>
+        <hr>
+        <h5>Subjects List</h5>
+        <ul class="list-group">
+          {% for s in subjects %}
+          <li class="list-group-item d-flex justify-content-between align-items-center">
+            <span><i class="fa-solid fa-book-open me-2 text-info"></i>{{ s.name }}</span>
+            <a href="?delete={{ s.id }}" class="btn btn-sm btn-danger" onclick="return confirm('Delete this subject?');"><i class="fa-solid fa-trash"></i></a>
+          </li>
+          {% else %}
+          <li class="list-group-item text-muted">No subjects added yet.</li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+    <a href="/admin/classes" class="btn btn-secondary"><i class="fa-solid fa-arrow-left"></i> Back to Classes</a>
+  </div>
+</div>
+{% endblock %}

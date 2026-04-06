@@ -1,0 +1,106 @@
+{% extends 'base.html' %}
+{% block title %}Faculty Dashboard{% endblock %}
+{% block content %}
+<div class="row mb-4">
+  <div class="col-md-12 text-center">
+    <h2 class="fw-bold mb-3"><i class="fa-solid fa-chalkboard-teacher me-2"></i>Faculty Dashboard</h2>
+  </div>
+</div>
+<style>
+.dashboard-card {
+  transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+  cursor: pointer;
+}
+.dashboard-card:hover {
+  background: #f0f8ff;
+  transform: scale(1.04);
+  box-shadow: 0 0 20px #b2dfdb;
+}
+</style>
+<div class="row row-cols-1 row-cols-md-3 g-4 mb-4">
+  <div class="col">
+    <div class="card dashboard-card shadow-sm h-100" onclick="location.href='/faculty/add_student'">
+      <div class="card-body text-center">
+        <i class="fa-solid fa-user-plus fa-2x text-success mb-2"></i>
+        <h5 class="card-title">Add Student</h5>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card dashboard-card shadow-sm h-100" onclick="location.href='/faculty/enter_attendance'">
+      <div class="card-body text-center">
+        <i class="fa-solid fa-calendar-check fa-2x text-info mb-2"></i>
+        <h5 class="card-title">Enter Attendance</h5>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card dashboard-card shadow-sm h-100" onclick="location.href='/faculty/exam_marks'">
+      <div class="card-body text-center">
+        <i class="fa-solid fa-file-circle-plus fa-2x text-danger mb-2"></i>
+        <h5 class="card-title">Enter Exam Marks</h5>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card dashboard-card shadow-sm h-100" onclick="location.href='{{ url_for('view_results') }}'">
+  <div class="card-body text-center">
+        <i class="fa-solid fa-clipboard-list fa-2x text-primary mb-2"></i>
+        <h5 class="card-title">View Results</h5>
+        <p class="card-text">View published exam results for your assigned classes.</p>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card dashboard-card shadow-sm h-100" onclick="location.href='/faculty/defaulters'">
+      <div class="card-body text-center">
+        <i class="fa-solid fa-triangle-exclamation fa-2x text-danger mb-2"></i>
+        <h5 class="card-title">Defaulters</h5>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card dashboard-card shadow-sm h-100" onclick="location.href='/faculty/attendance_register'">
+      <div class="card-body text-center">
+        <i class="fa-solid fa-table-list fa-2x text-info mb-2"></i>
+        <h5 class="card-title">Attendance Register</h5>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card dashboard-card shadow-sm h-100" onclick="location.href='/faculty/students'">
+      <div class="card-body text-center">
+        <i class="fa-solid fa-users fa-2x text-primary mb-2"></i>
+        <h5 class="card-title">View Students</h5>
+      </div>
+    </div>
+  </div>
+  <div class="col">
+    <div class="card dashboard-card shadow-sm h-100" onclick="location.href='/faculty/profile'">
+      <div class="card-body text-center">
+        <i class="fa-solid fa-user-edit fa-2x text-secondary mb-2"></i>
+        <h5 class="card-title">Profile</h5>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="row">
+  <div class="col-md-12">
+    <div class="card shadow-sm">
+      <div class="card-header bg-primary text-white"><i class="fa-solid fa-book me-2"></i>Assigned Subjects</div>
+      <div class="card-body">
+        <ul class="list-group list-group-flush">
+          {% for subject in subjects %}
+            <li class="list-group-item">
+              <i class="fa-solid fa-book-open me-2 text-info"></i>
+              <b>Subject:</b> {{ subject.subject_name }}<br>
+              <b>Class:</b> {{ subject.class_name }}<br>
+              <b>Division:</b> {{ subject.division_name }}
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

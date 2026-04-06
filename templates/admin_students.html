@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block title %}Students{% endblock %}
+{% block content %}
+<h2>View Students</h2>
+<form method="get" class="mb-4">
+  <div class="row g-3">
+    <div class="col-md-4">
+      <label class="form-label">Class</label>
+      <select name="class_id" class="form-select" required onchange="this.form.submit()">
+        <option value="">Select Class</option>
+        {% for c in classes %}
+        <option value="{{ c.id }}" {% if c.id == selected_class_id %}selected{% endif %}>{{ c.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-4">
+      <label class="form-label">Division</label>
+      <select name="division_id" class="form-select" required onchange="this.form.submit()">
+        <option value="">Select Division</option>
+        {% for d in divisions %}
+        <option value="{{ d.id }}" {% if d.id == selected_division_id %}selected{% endif %}>{{ d.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+  </div>
+</form>
+{% if students %}
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Roll No</th>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Class</th>
+      <th>Division</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for student in students %}
+    <tr>
+      <td>{{ student['roll_no'] }}</td>
+      <td>{{ student['name'] }}</td>
+      <td>{{ student['email'] }}</td>
+      <td>{{ student['class_name'] }}</td>
+      <td>{{ student['division_name'] }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% elif selected_class_id and selected_division_id %}
+<div class="alert alert-warning mt-3">No students found for this class/division.</div>
+{% endif %}
+</table>
+{% endblock %}

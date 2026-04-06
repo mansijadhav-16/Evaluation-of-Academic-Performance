@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block title %}Add Student{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card shadow-lg border-0">
+      <div class="card-header bg-success text-white text-center">
+        <h4 class="mb-0"><i class="fa-solid fa-user-plus me-2"></i>Add Student</h4>
+      </div>
+      <div class="card-body p-4">
+        <form method="POST">
+          {{ form.hidden_tag() }}
+          <div class="mb-3">
+            <label class="form-label"><i class="fa-solid fa-id-card me-1"></i> Roll No</label>
+            {{ form.roll_no(class="form-control") }}
+          </div>
+          <div class="mb-3">
+            <label class="form-label"><i class="fa-solid fa-user me-1"></i> Name</label>
+            {{ form.name(class="form-control") }}
+          </div>
+          <div class="mb-3">
+            <label class="form-label"><i class="fa-solid fa-envelope me-1"></i> Email</label>
+            {{ form.email(class="form-control") }}
+          </div>
+          <div class="mb-3">
+            <label class="form-label"><i class="fa-solid fa-phone me-1"></i> Phone No</label>
+            {{ form.phone(class="form-control") }}
+          </div>
+          <div class="mb-3">
+            <label class="form-label"><i class="fa-solid fa-school me-1"></i> Class</label>
+            {{ form.class_id(class="form-select") }}
+          </div>
+          <div class="mb-3">
+            <label class="form-label"><i class="fa-solid fa-users me-1"></i> Division</label>
+            {{ form.division_id(class="form-select") }}
+          </div>
+          <button type="submit" class="btn btn-success w-100 py-2"><i class="fa-solid fa-user-plus me-1"></i>Add Student</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+{% block title %}Manage Classes{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card shadow-lg border-0 mb-4">
+      <div class="card-header bg-primary text-white text-center">
+        <h4 class="mb-0"><i class="fa-solid fa-school me-2"></i>Manage Classes</h4>
+      </div>
+      <div class="card-body p-4">
+        <form method="POST" class="row g-3 align-items-center mb-3">
+          <div class="col-md-5">
+            <input type="text" name="name" class="form-control" placeholder="Class Name" required>
+          </div>
+          <div class="col-md-5">
+            <select name="divisions" class="form-select" multiple required>
+              <option value="" disabled>Select Divisions</option>
+              {% for d in divisions %}
+                <option value="{{ d.id }}">{{ d.name }}</option>
+              {% endfor %}
+            </select>
+            <small class="text-muted">Hold Ctrl (Windows) or Cmd (Mac) to select multiple</small>
+          </div>
+          <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100"><i class="fa-solid fa-plus"></i> Add Class</button>
+          </div>
+        </form>
+        <form method="POST" class="row g-3 align-items-center mb-4">
+          <div class="col-md-8">
+            <input type="text" name="new_division" class="form-control" placeholder="Add New Division">
+          </div>
+          <div class="col-md-4">
+            <button type="submit" name="add_division" value="1" class="btn btn-secondary w-100"><i class="fa-solid fa-layer-group"></i> Add Division</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <div class="card shadow-sm">
+      <div class="card-header bg-light fw-bold">All Classes</div>
+      <div class="card-body">
+        <div class="row g-3">
+          {% for c in classes %}
+          <div class="col-md-6">
+            <div class="card h-100 shadow-sm class-card" style="cursor:pointer;" onclick="window.location.href='/admin/class/{{ c.id }}/subjects'">
+              <div class="card-body">
+                <h5 class="card-title"><i class="fa-solid fa-school me-2 text-primary"></i>{{ c.name }}</h5>
+                <p class="card-text mb-0"><b>Divisions:</b> {{ c.divisions or 'None' }}</p>
+                <span class="badge bg-info mt-2">Manage Subjects</span>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

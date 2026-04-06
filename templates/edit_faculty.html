@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block title %}Edit Faculty Assignments{% endblock %}
+{% block content %}
+<h2>Edit Faculty Assignments</h2>
+<form method="POST">
+  <div class="mb-3">
+    <label class="form-label">Name</label>
+    <input type="text" class="form-control" name="name" value="{{ faculty.name }}" required>
+  </div>
+  <div class="mb-3">
+    <label class="form-label">Email</label>
+    <input type="email" class="form-control" name="email" value="{{ faculty.email }}" required>
+  </div>
+  <h5>Assignments</h5>
+  <div id="assignments">
+    {% for a in assignments %}
+    <div class="row mb-2">
+      <div class="col-md-3">
+        <select name="class_id_{{ loop.index }}" class="form-select class-select" data-idx="{{ loop.index }}" required onchange="updateSubjects(this)">
+          <option value="">Select Class</option>
+          {% for c in classes %}
+          <option value="{{ c.id }}" {% if c.id == a.class_id %}selected{% endif %}>{{ c.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-3">
+        <select name="division_id_{{ loop.index }}" class="form-select division-select" data-idx="{{ loop.index }}" required>
+          <option value="">Select Division</option>
+          {% for d in class_divisions[a.class_id] %}
+          <option value="{{ d.id }}" {% if d.id == a.division_id %}selected{% endif %}>{{ d.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-3">
+        <select name="subject_id_{{ loop.index }}" class="form-select subject-select" data-idx="{{ loop.index }}" required>
+          <option value="">Select Subject</option>
+          {% for s in class_subjects[a.class_id] %}
+          <option value="{{ s.id }}" {% if s.id == a.subject_id %}selected{% endif %}>{{ s.name }}</option>
+          {% endfor %}
+        </select>
+      </div>
+      <div class="col-md-2">
+        <button type="button" class="btn btn-danger" onclick="this.parentElement.parentElement.remove()">Remove</button>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  <button type="button" class="btn btn-secondary mb-3" onclick="addAssignment()">Add Assignment</button>
+  <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>
+{% set classOptions %}<option value="">Select Class</option>{% for c in classes %}<option value="{{ c.id }}">{{ c.name }}</option>{% endfor %}{% endset %}
+{% set divisionOptions %}<option value="">Select Division</option>{% for d in divisions %}<option value="{{ d.id }}">{{ d.name }}</option>{% endfor %}{% endset %}
+
+<script>
+var classSubjects = {{ class_subjects | tojson | safe }};
+var classDivisions = {{ class_divisions | tojson | safe }};
+var classOptions = `{{ classOptions | safe }}`;
+var divisionOptions = `{{ divisionOptions | safe }}`;
+
+function updateSubjects(classSelect) {
+  var idx = classSelect.getAttribute('data-idx');
+  var classId = classSelect.value;
+  var subjectSelect = document.querySelector('.subject-select[data-idx="' + idx + '"]');
+  var divisionSelect = document.querySelector('.division-select[data-idx="' + idx + '"]');
+  // Update subjects
+  subjectSelect.innerHTML = '<option value="">Select Subject</option>';
+  if (classSubjects[classId]) {
+    classSubjects[classId].forEach(function(s) {
+      subjectSelect.innerHTML += `<option value="${s.id}">${s.name}</option>`;
+    });
+  }
+  // Update divisions
+  divisionSelect.innerHTML = '<option value="">Select Division</option>';
+  if (classDivisions[classId]) {
+    classDivisions[classId].forEach(function(d) {
+      divisionSelect.innerHTML += `<option value="${d.id}">${d.name}</option>`;
+    });
+  }
+}
+
+function addAssignment() {
+  var idx = document.querySelectorAll('#assignments .row').length + 1;
+  var html = `<div class="row mb-2">
+    <div class="col-md-3">
+      <select name="class_id_${idx}" class="form-select class-select" data-idx="${idx}" required onchange="updateSubjects(this)">${classOptions}</select>
+    </div>
+    <div class="col-md-3">
+      <select name="division_id_${idx}" class="form-select division-select" data-idx="${idx}" required><option value="">Select Division</option></select>
+    </div>
+    <div class="col-md-3">
+      <select name="subject_id_${idx}" class="form-select subject-select" data-idx="${idx}" required><option value="">Select Subject</option></select>
+    </div>
+    <div class="col-md-2">
+      <button type="button" class="btn btn-danger" onclick="this.parentElement.parentElement.remove()">Remove</button>
+    </div>
+  </div>`;
+  document.getElementById('assignments').insertAdjacentHTML('beforeend', html);
+}
+</script>
+{% endblock %}

@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block title %}View Results{% endblock %}
+{% block content %}
+<div class="container mt-4">
+  <h2 class="mb-4"><i class="fa-solid fa-clipboard-list me-2"></i>View Published Results</h2>
+  <form method="get" class="row g-3 mb-4">
+    <div class="col-md-4">
+      <label class="form-label">Exam</label>
+      <select class="form-select" name="exam_id" required onchange="this.form.submit()">
+        <option value="">Select Exam</option>
+        {% for exam in exams %}
+        <option value="{{ exam.id }}" {% if exam.id|string == selected_exam_id|string %}selected{% endif %}>{{ exam.name }} ({{ exam.year }}-{{ '%02d'|format(exam.month) }})</option>
+        {% endfor %}
+      </select>
+    </div>
+    {% if show_class_select and exam_classes|length > 1 %}
+    <div class="col-md-4">
+      <label class="form-label">Class</label>
+      <select class="form-select" name="class_id" required onchange="this.form.submit()">
+        <option value="">Select Class</option>
+        {% for c in exam_classes %}
+        <option value="{{ c.id }}" {% if c.id|string == selected_class_id|string %}selected{% endif %}>{{ c.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    {% endif %}
+    {% if not show_class_select or exam_classes|length == 1 %}
+    <input type="hidden" name="class_id" value="{{ selected_class_id }}">
+    {% endif %}
+  </form>
+  {% if students and subjects %}
+  <div class="card mt-3">
+    <div class="card-body p-0">
+      <table class="table table-bordered mb-0">
+        <thead class="table-light">
+          <tr>
+            <th>Roll No</th>
+            <th>Name</th>
+            {% for subj in subjects %}
+            <th>{{ subj.name }}</th>
+            {% endfor %}
+            <th>Total</th> {# Renamed and consolidated column #}
+            <th>Percentage</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for student in students %}
+          {% set ns = namespace(total=0, total_max_marks=0) %}
+          <tr>
+            <td>{{ student.roll_no }}</td>
+            <td>{{ student.name }}</td>
+            {% for subj in subjects %}
+              {% set m = marks.get((student.id, subj.id)) %}
+              <td>{% if m %}{{ m.marks }}/{{ m.out_of }}{% else %}-{% endif %}</td>
+              {% if m %}
+                {% set ns.total = ns.total + m.marks %}
+                {% set ns.total_max_marks = ns.total_max_marks + m.out_of %}
+              {% endif %}
+            {% endfor %}
+            <td>{% if ns.total_max_marks > 0 %}{{ ns.total }}/{{ ns.total_max_marks }}{% else %}{{ ns.total }}{% endif %}</td>
+            <td>{% if ns.total_max_marks > 0 %}{{ '%.2f' % ((ns.total / ns.total_max_marks) * 100) }}%{% else %}-{% endif %}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+  {% elif selected_exam_id %}
+    <div class="alert alert-warning mt-3">No published result found for this exam.</div>
+  {% endif %}
+</div>
+{% endblock %}

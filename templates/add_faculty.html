@@ -1,0 +1,139 @@
+{% extends 'base.html' %}
+{% block title %}Add Faculty{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-10">
+    <div class="card shadow-lg border-0">
+      <div class="card-header bg-success text-white text-center">
+        <h4 class="mb-0"><i class="fa-solid fa-user-plus me-2"></i>Add Faculty</h4>
+      </div>
+      <div class="card-body p-4">
+        <form method="POST">
+          {{ form.hidden_tag() }}
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <label class="form-label"><i class="fa-solid fa-user me-1"></i> Name</label>
+              {{ form.name(class="form-control") }}
+            </div>
+            <div class="col-md-4">
+              <label class="form-label"><i class="fa-solid fa-envelope me-1"></i> Email</label>
+              {{ form.email(class="form-control") }}
+            </div>
+            <div class="col-md-4">
+                <label class="form-label"><i class="fa-solid fa-lock me-1"></i> Password</label>
+                <div class="input-group">
+                  {{ form.password(class="form-control", id="add-faculty-password") }}
+                  <span class="input-group-text" onclick="togglePassword('add-faculty-password', this)"><i class="fa fa-eye"></i></span>
+                </div>
+            </div>
+          </div>
+          <hr>
+          <h5 class="mb-3"><i class="fa-solid fa-chalkboard-teacher me-2"></i>Faculty Assignments</h5>
+          <div id="assignments-list"
+            data-class-divisions='{{ class_divisions|tojson }}'
+            data-class-subjects='{{ class_subjects|tojson }}'>
+            {% for assignment in form.assignments %}
+            <div class="row g-2 mb-2 assignment-row" data-index="{{ loop.index0 }}">
+              {{ assignment.csrf_token }}
+              <div class="col-md-4">
+                {{ assignment.class_id.label(class="form-label") }}
+                {{ assignment.class_id(class="form-select class-select") }}
+              </div>
+              <div class="col-md-4">
+                {{ assignment.division_id.label(class="form-label") }}
+                {{ assignment.division_id(class="form-select division-select") }}
+              </div>
+              <div class="col-md-4">
+                {{ assignment.subject_id.label(class="form-label") }}
+                {{ assignment.subject_id(class="form-select subject-select") }}
+              </div>
+            </div>
+            {% endfor %}
+          </div>
+          <!-- Hidden template for new assignment row -->
+          <div id="assignment-template" class="d-none">
+            <div class="row g-2 mb-2 assignment-row" data-index="__index__">
+              <div class="col-md-4">
+                <label class="form-label">Class</label>
+                <select name="assignments-__index__-class_id" class="form-select class-select">
+                  {% for c in classes %}<option value="{{c.id}}">{{c.name}}</option>{% endfor %}
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Division</label>
+                <select name="assignments-__index__-division_id" class="form-select division-select">
+                  <!-- Will be populated by JS -->
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label">Subject</label>
+                <select name="assignments-__index__-subject_id" class="form-select subject-select">
+                  <!-- Will be populated by JS -->
+                </select>
+              </div>
+            </div>
+          </div>
+          <button type="button" class="btn btn-outline-primary mb-3" id="add-assignment-btn"><i class="fa-solid fa-plus"></i> Add Assignment</button>
+          <button type="submit" class="btn btn-success w-100 py-2"><i class="fa-solid fa-user-plus me-1"></i>Add Faculty</button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+// Dependent dropdowns for class/division/subject
+function updateDivisionAndSubject(row, classId, classDivisions, classSubjects) {
+  // Update divisions
+  const divisionSelect = row.querySelector('.division-select');
+  divisionSelect.innerHTML = '';
+  (classDivisions[classId] || []).forEach(function(div) {
+    const opt = document.createElement('option');
+    opt.value = div.id;
+    opt.textContent = div.name;
+    divisionSelect.appendChild(opt);
+  });
+  // Update subjects
+  const subjectSelect = row.querySelector('.subject-select');
+  subjectSelect.innerHTML = '';
+  (classSubjects[classId] || []).forEach(function(sub) {
+    const opt = document.createElement('option');
+    opt.value = sub.id;
+    opt.textContent = sub.name;
+    subjectSelect.appendChild(opt);
+  });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  const addBtn = document.getElementById('add-assignment-btn');
+  const list = document.getElementById('assignments-list');
+  const template = document.getElementById('assignment-template').innerHTML;
+  const classDivisions = JSON.parse(list.dataset.classDivisions);
+  const classSubjects = JSON.parse(list.dataset.classSubjects);
+
+  // Initial population for existing rows
+  list.querySelectorAll('.assignment-row').forEach(function(row) {
+    const classSelect = row.querySelector('.class-select');
+    classSelect.addEventListener('change', function() {
+      updateDivisionAndSubject(row, this.value, classDivisions, classSubjects);
+    });
+    // Populate on load
+    updateDivisionAndSubject(row, classSelect.value, classDivisions, classSubjects);
+  });
+
+  if (addBtn) {
+    addBtn.addEventListener('click', function() {
+      let count = list.querySelectorAll('.assignment-row').length;
+      let html = template.replace(/__index__/g, count);
+      list.insertAdjacentHTML('beforeend', html);
+      const newRow = list.querySelectorAll('.assignment-row')[count];
+      const classSelect = newRow.querySelector('.class-select');
+      classSelect.addEventListener('change', function() {
+        updateDivisionAndSubject(newRow, this.value, classDivisions, classSubjects);
+      });
+      // Populate for default selected class
+      updateDivisionAndSubject(newRow, classSelect.value, classDivisions, classSubjects);
+    });
+  }
+});
+</script>
+{% endblock %}

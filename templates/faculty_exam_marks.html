@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Enter Marks for Exam</h2>
+  <form method="get" class="row g-3 mb-4">
+    <div class="col-md-2">
+      <label for="class_id" class="form-label">Class</label>
+      <select class="form-select" name="class_id" id="class_id" required onchange="this.form.submit()">
+        <option value="">Select Class</option>
+        {% for c in classes %}
+        <option value="{{ c.id }}" {% if c.id|string == selected_class_id|string %}selected{% endif %}>{{ c.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2">
+      <label for="division_id" class="form-label">Division</label>
+      <select class="form-select" name="division_id" id="division_id" required onchange="this.form.submit()">
+        <option value="">Select Division</option>
+        {% for d in divisions %}
+        <option value="{{ d.id }}" {% if d.id|string == selected_division_id|string %}selected{% endif %}>{{ d.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2">
+      <label for="subject_id" class="form-label">Subject</label>
+      <select class="form-select" name="subject_id" id="subject_id" required onchange="this.form.submit()">
+        <option value="">Select Subject</option>
+        {% for subject in subjects %}
+        <option value="{{ subject.id }}" {% if subject.id|string == selected_subject_id|string %}selected{% endif %}>{{ subject.name }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-3">
+      <label for="exam_id" class="form-label">Exam</label>
+      <select class="form-select" name="exam_id" id="exam_id" required onchange="this.form.submit()">
+        <option value="">Select Exam</option>
+        {% for exam in exams %}
+        <option value="{{ exam.id }}" {% if exam.id|string == selected_exam_id|string %}selected{% endif %}>{{ exam.name }} ({{ exam.year }}-{{ '%02d'|format(exam.month) }})</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div class="col-md-2 align-self-end">
+      <button type="submit" class="btn btn-primary">Show Students</button>
+    </div>
+  </form>
+
+  {% if students %}
+  <form method="post">
+    <input type="hidden" name="class_id" value="{{ selected_class_id }}">
+    <input type="hidden" name="division_id" value="{{ selected_division_id }}">
+    <input type="hidden" name="subject_id" value="{{ selected_subject_id }}">
+    <input type="hidden" name="exam_id" value="{{ selected_exam_id }}">
+    <div class="row mb-3">
+      <div class="col-md-3">
+        <label for="out_of" class="form-label">Out Of</label>
+        <input type="number" name="out_of" id="out_of" class="form-control" min="1" max="1000" value="{{ out_of|default('100') }}" required>
+      </div>
+    </div>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Roll No</th>
+          <th>Name</th>
+          <th>Marks</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for student in students %}
+        <tr>
+          <td>{{ student.roll_no }}</td>
+          <td>{{ student.name }}</td>
+          <td><input type="number" name="marks_{{ student.id }}" class="form-control" min="0" max="{{ out_of|default('100') }}" step="0.01" value="{{ marks[student.id]|default('') }}" required></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <button type="submit" class="btn btn-success">Submit Marks</button>
+  </form>
+  {% endif %}
+</div>
+{% endblock %}
